@@ -1,0 +1,163 @@
+{% extends "inventory/base.html" %}
+
+{% block extra_styles %}
+<style>
+    .stat-red {
+        background: linear-gradient(135deg, #c45353, #de6b6b);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="page-hero">
+    <div>
+        <h1 class="page-title">Dự báo</h1>
+        <p class="page-subtitle">Chọn một sản phẩm để xem độ chính xác của mô hình, dự báo 7 ngày tới và ảnh hưởng sang nhu cầu nguyên vật liệu.</p>
+    </div>
+    <div class="hero-badge">Phân tích dự báo</div>
+</div>
+
+<div class="content-grid">
+    <div class="panel">
+        <h2 class="panel-title">Chọn sản phẩm</h2>
+        <p class="panel-subtitle">Khi bạn chọn sản phẩm, hệ thống sẽ tính các chỉ số MAE, RMSE, MAPE và tổng hợp dự báo BOM.</p>
+        <form method="POST" class="control-form">
+            {% csrf_token %}
+            <div class="field">
+                <label>Sản phẩm</label>
+                <select name="product_id" class="searchable">
+                    <option value="">-- Chọn sản phẩm --</option>
+                    {% for p in products %}
+                        <option value="{{ p.id }}"
+                            {% if selected_product and p.id == selected_product.id %}selected{% endif %}>
+                            {{ p.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn-secondary">Chạy phân tích</button>
+        </form>
+    </div>
+
+    <div class="panel">
+        <h2 class="panel-title">Đánh giá mô hình</h2>
+        <p class="panel-subtitle">MAPE được dùng để đánh giá mức độ phù hợp của mô hình đối với sản phẩm đã chọn.</p>
+        {% if product_result %}
+            <div class="info-chip">
+                <strong> Đánh giá :</strong>
+                {% if product_result.mape < 10 %}
+                    Mô hình có độ chính xác rất cao (MAPE < 10%). Kết quả dự báo rất đáng tin cậy.
+                {% elif product_result.mape < 15 %}
+                    Mô hình ở mức chấp nhận được (10% - 20%). Cần theo dõi thêm biến động thực tế.
+                {% else %}
+                    Độ sai số cao (MAPE > 20%). Nhu cầu sản phẩm này có biến động quá lớn, mô hình hiện tại không phù hợp.
+                {% endif %}
+            </div>
+        {% else %}
+            <p class="muted-text">Chưa có dữ liệu dự báo. Hãy chọn sản phẩm để bắt đầu.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% if product_result %}
+<div class="stats-grid">
+    <div class="stat-card stat-blue">
+        <h3>Trung bình</h3>
+        <p>{{ product_result.mean|floatformat:2 }}</p>
+    </div>
+    <div class="stat-card stat-blue">
+        <h3>Độ lệch chuẩn</h3>
+        <p>{{ product_result.std|floatformat:2 }}</p>
+    </div>
+    <div class="stat-card stat-blue">
+        <h3>MAE</h3>
+        <p>{{ product_result.mae|floatformat:2 }}</p>
+    </div>
+    <div class="stat-card stat-blue">
+        <h3>RMSE</h3>
+        <p>{{ product_result.rmse|floatformat:2 }}</p>
+    </div>
+    <div class="stat-card stat-red">
+        <h3>MAPE</h3>
+        <p>{{ product_result.mape|floatformat:2 }}%</p>
+    </div>
+</div>
+{% endif %}
+
+<div class="table-card">
+    <div class="table-head">
+        <div>
+            <h2>Dự báo 7 ngày tới</h2>
+            <p>Giá trị dự báo được trình bày theo thứ tự ngày để theo dõi xu hướng nhanh.</p>
+        </div>
+    </div>
+    <div class="table-scroll">
+        <table>
+            <tr>
+                <th>Chỉ số</th>
+                {% for val in forecast_7 %}
+                    <th>Ngày {{ forloop.counter }}</th>
+                {% empty %}
+                    <th>Ngày 1</th>
+                    <th>Ngày 2</th>
+                    <th>Ngày 3</th>
+                    <th>Ngày 4</th>
+                    <th>Ngày 5</th>
+                    <th>Ngày 6</th>
+                    <th>Ngày 7</th>
+                {% endfor %}
+            </tr>
+            <tr>
+                <th>Nhu cầu</th>
+                {% for val in forecast_7 %}
+                    <td>{{ val|floatformat:2 }}</td>
+                {% empty %}
+                    <td colspan="7" class="empty-state">Chưa có dữ liệu dự báo 7 ngày.</td>
+                {% endfor %}
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="table-card">
+    <div class="table-head">
+        <div>
+            <h2>Nhu cầu nguyên vật liệu theo BOM</h2>
+            <p>Bảng quy đổi dự báo sản phẩm sang mức nhu cầu từng nguyên vật liệu trong 7 ngày tới.</p>
+        </div>
+    </div>
+    <div class="table-scroll">
+        <table>
+            <tr>
+                <th>Nguyên vật liệu</th>
+                <th>Trung bình</th>
+                <th>Độ lệch chuẩn</th>
+                <th>D1</th>
+                <th>D2</th>
+                <th>D3</th>
+                <th>D4</th>
+                <th>D5</th>
+                <th>D6</th>
+                <th>D7</th>
+            </tr>
+
+            {% for m in material_results %}
+            <tr>
+                <td>{{ m.material }}</td>
+                <td>{{ m.mean }}</td>
+                <td>{{ m.std }}</td>
+                {% for val in m.forecast_7 %}
+                    <td>{{ val }}</td>
+                {% endfor %}
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="10" class="empty-state">Chưa có kết quả quy đổi BOM. Hãy chọn sản phẩm trước.</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+{% endblock %}

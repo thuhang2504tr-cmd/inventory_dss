@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chào mừng bạn đến hệ thống DSS tồn kho</title>
+    <style>
+        :root {
+            --bg-1: #f2f7fa;
+            --bg-2: #eef8f5;
+            --bg-3: #f4fbf8;
+            --ink: #1f3442;
+            --muted: #617887;
+            --blue: linear-gradient(135deg, #4f7ea1, #6b98b7);
+            --green: linear-gradient(135deg, #4d8f78, #74b095);
+            --line: rgba(147, 165, 176, 0.26);
+            --shadow: 0 24px 48px rgba(39, 62, 80, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            display: grid;
+            place-items: center;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at top left, rgba(107, 152, 183, 0.18), transparent 24%),
+                radial-gradient(circle at bottom right, rgba(116, 176, 149, 0.16), transparent 26%),
+                linear-gradient(135deg, var(--bg-1) 0%, var(--bg-3) 48%, var(--bg-2) 100%);
+            padding: 24px;
+        }
+
+        .welcome-shell {
+            width: min(960px, 100%);
+            display: grid;
+            grid-template-columns: minmax(320px, 1.2fr) minmax(300px, 0.9fr);
+            gap: 24px;
+            align-items: stretch;
+        }
+
+        .welcome-panel,
+        .login-panel {
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+        }
+
+        .welcome-panel {
+            padding: 34px;
+            background:
+                radial-gradient(circle at top right, rgba(107, 152, 183, 0.16), transparent 24%),
+                linear-gradient(145deg, rgba(255, 255, 255, 0.94), rgba(247, 252, 250, 0.86));
+        }
+
+        .welcome-badge {
+            display: inline-flex;
+            padding: 10px 16px;
+            border-radius: 999px;
+            color: #fff;
+            font-weight: 700;
+            background: var(--blue);
+            margin-bottom: 18px;
+        }
+
+        .welcome-title {
+            margin: 0 0 12px;
+            font-size: 42px;
+            line-height: 1.16;
+        }
+
+        .welcome-text {
+            margin: 0 0 28px;
+            color: var(--muted);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        .feature-list {
+            display: grid;
+            gap: 14px;
+        }
+
+        .feature-item {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 14px 16px;
+            border-radius: 18px;
+            background: rgba(244, 250, 249, 0.92);
+            border: 1px solid var(--line);
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            color: #fff;
+            font-weight: 700;
+            background: var(--green);
+            flex: 0 0 auto;
+        }
+
+        .feature-item strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .feature-item span {
+            color: var(--muted);
+            line-height: 1.55;
+            font-size: 14px;
+        }
+
+        .login-panel {
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .login-title {
+            margin: 0 0 10px;
+            font-size: 30px;
+        }
+
+        .login-text {
+            margin: 0 0 22px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .field {
+            display: grid;
+            gap: 8px;
+        }
+
+        .field label {
+            font-weight: 700;
+        }
+
+        .field input {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 16px;
+            border: 1px solid #d8e2ef;
+            font-size: 16px;
+            color: var(--ink);
+        }
+
+        .submit-btn {
+            width: 100%;
+            margin-top: 16px;
+            padding: 14px 16px;
+            border: none;
+            border-radius: 16px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            background: var(--blue);
+            box-shadow: 0 14px 26px rgba(79, 126, 161, 0.2);
+        }
+
+        .error-message {
+            margin: 14px 0 0;
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: rgba(196, 83, 83, 0.12);
+            color: #a04444;
+            font-weight: 700;
+        }
+
+        @media (max-width: 820px) {
+            .welcome-shell {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome-title {
+                font-size: 34px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="welcome-shell">
+        <section class="welcome-panel">
+            <div class="welcome-badge">DSS Inventory</div>
+            <h1 class="welcome-title">Chào mừng bạn đến hệ thống quản lý tồn kho</h1>
+            <p class="welcome-text">
+                Hãy nhập tên để bắt đầu sử dụng bảng điều khiển. Bạn có thể theo dõi doanh số,
+                giao dịch kho, cảnh báo vật tư, dự báo và phân tích ABC trong cùng một nơi.
+            </p>
+
+            <div class="feature-list">
+                <div class="feature-item">
+                    <div class="feature-icon">1</div>
+                    <div>
+                        <strong>Quản lý tập trung</strong>
+                        <span>Xem nhanh tổng quan doanh số, giao dịch và các chỉ số tồn kho quan trọng.</span>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">2</div>
+                    <div>
+                        <strong>Dự báo và cảnh báo</strong>
+                        <span>Phân tích nhu cầu sản phẩm và xác định nguyên vật liệu cần ưu tiên xử lý.</span>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">3</div>
+                    <div>
+                        <strong>Truy cập nhanh</strong>
+                        <span>Không cần mật khẩu, chỉ cần nhập tên để vào hệ thống và bắt đầu làm việc.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="login-panel">
+            <h2 class="login-title">Đăng nhập nhanh</h2>
+            <p class="login-text">Nhập tên của bạn để vào hệ thống.</p>
+
+            <form method="POST">
+                {% csrf_token %}
+                <div class="field">
+                    <label for="display_name">Tên hiển thị</label>
+                    <input id="display_name" name="display_name" type="text" placeholder="Ví dụ: Admin" autocomplete="name" required>
+                </div>
+
+                <button type="submit" class="submit-btn">Vào hệ thống</button>
+
+                {% if error_message %}
+                <div class="error-message">{{ error_message }}</div>
+                {% endif %}
+            </form>
+        </section>
+    </div>
+</body>
+</html>

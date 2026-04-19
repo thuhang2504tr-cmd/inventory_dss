@@ -1,0 +1,424 @@
+{% extends 'inventory/base.html' %}
+
+{% block content %}
+
+<style>
+    .dashboard-page {
+        background:
+            radial-gradient(circle at top left, rgba(107, 152, 183, 0.18), transparent 28%),
+            radial-gradient(circle at top right, rgba(116, 176, 149, 0.16), transparent 30%),
+            linear-gradient(135deg, #f2f8fb 0%, #f4fbf8 45%, #eef8f5 100%);
+        border-radius: 28px;
+        padding: 28px;
+        box-shadow: 0 20px 50px rgba(39, 61, 107, 0.12);
+    }
+
+    .dashboard-hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 24px;
+    }
+
+    .dashboard-title {
+        margin: 0;
+        font-size: 34px;
+        color: #16324f;
+    }
+
+    .dashboard-subtitle {
+        margin: 8px 0 0;
+        color: #4a5a6a;
+        font-size: 16px;
+    }
+
+    .dashboard-badge {
+        background: var(--accent-1);
+        color: #fff;
+        padding: 10px 16px;
+        border-radius: 999px;
+        font-weight: 700;
+        box-shadow: 0 12px 24px rgba(84, 119, 146, 0.22);
+    }
+
+    .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 18px;
+        margin-bottom: 28px;
+    }
+
+    .card {
+        color: #fff;
+        padding: 22px;
+        border-radius: 20px;
+        text-align: left;
+        box-shadow: 0 18px 30px rgba(40, 52, 107, 0.16);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .card::after {
+        content: "";
+        position: absolute;
+        right: -28px;
+        top: -28px;
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.14);
+    }
+
+    .card-products {
+        background: var(--accent-1);
+    }
+
+    .card-materials {
+        background: var(--accent-2);
+    }
+
+    .card h3 {
+        margin: 0 0 10px;
+        font-size: 15px;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+    }
+
+    .card p {
+        margin: 0;
+        font-size: 38px;
+        font-weight: 800;
+    }
+
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 22px;
+    }
+
+    .dashboard-panel {
+        background: rgba(255, 255, 255, 0.88);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        border-radius: 22px;
+        padding: 22px;
+        box-shadow: 0 14px 28px rgba(55, 74, 109, 0.1);
+    }
+
+    .dashboard-panel h2 {
+        margin: 0 0 16px;
+        color: #17324d;
+        font-size: 24px;
+    }
+
+    .dashboard-panel form {
+        display: grid;
+        gap: 12px;
+    }
+
+    .dashboard-panel label {
+        font-weight: 700;
+        color: #28435d;
+        margin-bottom: -4px;
+    }
+
+    .dashboard-panel input,
+    .dashboard-panel select,
+    .dashboard-panel button {
+        width: 100%;
+        box-sizing: border-box;
+        border-radius: 14px;
+        border: 1px solid #d8e4f1;
+        padding: 12px 14px;
+        font-size: 15px;
+    }
+
+    .dashboard-panel input,
+    .dashboard-panel select {
+        background: #fff;
+    }
+
+    .dashboard-panel button {
+        border: none;
+        color: #fff;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .btn-sales {
+        background: var(--accent-1);
+        box-shadow: 0 12px 22px rgba(79, 126, 161, 0.22);
+    }
+
+    .btn-transaction {
+        background: var(--accent-2);
+        box-shadow: 0 12px 22px rgba(63, 124, 133, 0.2);
+    }
+
+    .dashboard-panel button:hover {
+        transform: translateY(-1px);
+    }
+
+    .dashboard-note {
+        margin: 14px 0 0;
+        padding: 12px 14px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, rgba(98, 170, 177, 0.14), rgba(116, 176, 149, 0.16));
+        color: #355460;
+        font-weight: 600;
+    }
+
+    .dashboard-table-wrap {
+        margin-top: 22px;
+        background: rgba(255, 255, 255, 0.94);
+        border-radius: 22px;
+        overflow: hidden;
+        box-shadow: 0 18px 36px rgba(39, 58, 92, 0.12);
+    }
+
+    .dashboard-table-title {
+        margin: 0;
+        padding: 18px 20px;
+        color: #fff;
+        font-size: 22px;
+    }
+
+    .sales-title {
+        background: var(--accent-1);
+    }
+
+    .transaction-title {
+        background: var(--accent-2);
+    }
+
+    .dashboard-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: transparent;
+    }
+
+    .dashboard-table th {
+        background: var(--table-th);
+        color: #fff;
+        padding: 14px;
+        font-size: 14px;
+    }
+
+    .dashboard-table td {
+        padding: 14px;
+        border-bottom: 1px solid #edf2f7;
+        background: rgba(255, 255, 255, 0.96);
+    }
+
+    .dashboard-table tr:nth-child(even) td {
+        background: #f8fbff;
+    }
+
+    .action-link {
+        color: #e11d48;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .action-link:hover {
+        text-decoration: underline;
+    }
+
+    .type-in,
+    .type-out {
+        display: inline-block;
+        min-width: 74px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        color: #fff;
+        font-weight: 700;
+        font-size: 13px;
+    }
+
+    .type-in {
+        background: linear-gradient(135deg, #5f8a67, #7ca184);
+    }
+
+    .type-out {
+        background: linear-gradient(135deg, #c45353, #de6b6b);
+    }
+
+    @media (max-width: 768px) {
+        .dashboard-page {
+            padding: 18px;
+            border-radius: 20px;
+        }
+
+        .dashboard-hero {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .dashboard-title {
+            font-size: 28px;
+        }
+    }
+</style>
+
+<div class="dashboard-page">
+<div class="dashboard-hero">
+    <div>
+        <h1 class="dashboard-title">Tổng quan</h1>
+        <p class="dashboard-subtitle">Bảng điều khiển tổng hợp doanh số, giao dịch kho và số liệu cập nhật gần nhất.</p>
+    </div>
+    <div class="dashboard-badge">Hệ thống tồn kho</div>
+</div>
+
+<!-- ========================= -->
+<!-- SUMMARY -->
+<!-- ========================= -->
+<div class="cards">
+    <div class="card card-products">
+        <h3>Tổng số sản phẩm</h3>
+        <p>{{ total_products }}</p>
+    </div>
+
+    <div class="card card-materials">
+        <h3>Tổng số nguyên vật liệu</h3>
+        <p>{{ total_materials }}</p>
+    </div>
+</div>
+
+<div class="dashboard-grid">
+<div class="dashboard-panel">
+<h2>Nhập doanh số</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="add_sales">
+
+    <label>Sản phẩm:</label>
+    <select name="product_id" class="searchable">
+        {% for p in products %}
+        <option value="{{ p.id }}">{{ p.name }}</option>
+        {% endfor %}
+    </select>
+
+    <label>Số lượng:</label>
+    <input type="number" name="quantity" required min="1">
+
+    <label>Ngày:</label>
+    <input type="date" name="date"
+           {% if min_date %}min="{{ min_date }}"{% endif %}
+           max="{{ today }}"
+           required>
+
+    <button type="submit" class="btn-sales">Thêm doanh số</button>
+</form>
+
+{% if min_date %}
+<p class="dashboard-note">Ngày gần nhất đã nhập: <b>{{ min_date }}</b></p>
+{% endif %}
+
+</div>
+
+<div class="dashboard-panel">
+<h2>Nhập giao dịch kho</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="add_transaction">
+
+    <label>Nguyên vật liệu:</label>
+    <select name="material_id" class="searchable">
+        {% for m in materials %}
+        <option value="{{ m.id }}">{{ m.name }}</option>
+        {% endfor %}
+    </select>
+
+    <label>Số lượng:</label>
+    <input type="number" name="quantity" required>
+
+    <label>Loại:</label>
+    <select name="transaction_type">
+        <option value="IN">Nhập kho</option>
+        <option value="OUT">Xuất kho</option>
+    </select>
+
+    <label>Ngày:</label>
+    <input type="date" name="date" required>
+
+    <button type="submit" class="btn-transaction">Thêm giao dịch</button>
+</form>
+</div>
+</div>
+
+<div class="dashboard-table-wrap">
+<h2 class="dashboard-table-title sales-title">Doanh số gần đây</h2>
+<table class="dashboard-table">
+    <tr>
+        <th>Sản phẩm</th>
+        <th>Số lượng</th>
+        <th>Ngày</th>
+        <th>Thao tác</th>
+    </tr>
+
+    {% for s in sales_list %}
+    <tr>
+        <td>{{ s.product.name }}</td>
+        <td>{{ s.quantity }}</td>
+        <td>{{ s.date }}</td>
+        <td>
+            <a href="{% url 'delete_sale' s.id %}"
+               onclick="return confirm('Bạn chắc chắn muốn xóa?')"
+               class="action-link">
+                Xóa
+            </a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="4" style="text-align:center;">Chưa có dữ liệu</td>
+    </tr>
+    {% endfor %}
+</table>
+</div>
+
+<div class="dashboard-table-wrap">
+<h2 class="dashboard-table-title transaction-title">Giao dịch gần đây</h2>
+<table class="dashboard-table">
+    <tr>
+        <th>Nguyên vật liệu</th>
+        <th>Số lượng</th>
+        <th>Loại</th>
+        <th>Ngày</th>
+        <th>Thao tác</th>
+    </tr>
+
+    {% for t in transaction_list %}
+    <tr>
+        <td>{{ t.material.name }}</td>
+        <td>{{ t.quantity }}</td>
+        <td>
+            {% if t.transaction_type == 'IN' %}
+                <span class="type-in">Nhập kho</span>
+            {% else %}
+                <span class="type-out">Xuất kho</span>
+            {% endif %}
+        </td>
+        <td>{{ t.date }}</td>
+        <td>
+            <a href="{% url 'delete_transaction' t.id %}"
+               onclick="return confirm('Xóa transaction này?')"
+               class="action-link">
+                Xóa
+            </a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="5" style="text-align:center;">Chưa có dữ liệu</td>
+    </tr>
+    {% endfor %}
+</table>
+</div>
+</div>
+
+{% endblock %}
