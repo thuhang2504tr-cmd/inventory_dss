@@ -454,3 +454,8 @@ def abc_page(request):
         "abc_total": abc_total,
         "selected_abc": abc_filter
     })
+
+
+@session_name_required
+def system_settings(request):
+    return render(request, "inventory/system_settings.html")

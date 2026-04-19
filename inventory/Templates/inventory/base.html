@@ -40,7 +40,6 @@
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            display: flex;
             min-height: 100vh;
             background:
                 radial-gradient(circle at top left, rgba(107, 152, 183, 0.16), transparent 22%),
@@ -53,12 +52,15 @@
             width: 250px;
             background: var(--nav-bg);
             color: white;
-            min-height: 100vh;
+            height: 100vh;
             padding: 24px 18px;
-            position: sticky;
+            position: fixed;
+            left: 0;
             top: 0;
+            z-index: 1000;
+            overflow-y: auto;
             transition: width 0.24s ease, padding 0.24s ease;
-            overflow: hidden;
+            overflow-x: hidden;
         }
 
         .sidebar-brand {
@@ -76,9 +78,15 @@
             transition: opacity 0.18s ease, transform 0.18s ease;
         }
 
-        .sidebar-brand h2 {
-            margin: 0 0 8px;
-            font-size: 30px;
+        .brand-logo {
+            display: inline-block;
+            margin-bottom: 8px;
+            padding: 8px 12px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.12);
+            color: #ffffff;
+            font-size: 22px;
+            font-weight: 800;
             letter-spacing: 1px;
         }
 
@@ -150,7 +158,8 @@
         }
 
         .main {
-            flex: 1;
+            width: calc(100% - 250px);
+            margin-left: 250px;
             padding: 26px;
             transition: padding 0.24s ease;
         }
@@ -160,6 +169,11 @@
             padding: 24px 12px;
         }
 
+        body.sidebar-collapsed .main {
+            width: calc(100% - 88px);
+            margin-left: 88px;
+        }
+
         body.sidebar-collapsed .sidebar-brand {
             display: flex;
             padding-left: 0;
@@ -167,7 +181,6 @@
             text-align: center;
             justify-content: center;
             align-items: center;
-            margin-left: -21px;
         }
 
         body.sidebar-collapsed .sidebar-brand-text,
@@ -545,14 +558,13 @@
         }
 
         @media (max-width: 980px) {
-            body {
-                flex-direction: column;
-            }
-
             .sidebar {
                 width: 100%;
                 min-height: auto;
                 position: static;
+                height: auto;
+                left: auto;
+                z-index: auto;
             }
 
             .sidebar-nav {
@@ -589,6 +601,8 @@
             }
 
             .main {
+                width: 100%;
+                margin-left: 0;
                 padding: 18px;
             }
 
@@ -622,8 +636,7 @@
 <div class="sidebar">
     <div class="sidebar-brand">
         <div class="sidebar-brand-text">
-            <h2>STRATIX</h2>
-            <p>Inventory DSS</p>
+            <div class="brand-logo">STRATIX</div>
         </div>
         <button type="button" class="sidebar-toggle" id="sidebarToggle" aria-label="Thu gọn hoặc mở rộng sidebar" title="Thu gọn hoặc mở rộng sidebar">
             <i class="fas fa-bars"></i>
@@ -654,6 +667,10 @@
         <a href="{% url 'abc' %}" class="{% if request.resolver_match.url_name == 'abc' %}active{% endif %}">
             <i class="fas fa-layer-group"></i>
             <span>Phân tích ABC</span>
+        </a>
+        <a href="{% url 'system-settings' %}" class="{% if request.resolver_match.url_name == 'system-settings' %}active{% endif %}">
+            <i class="fas fa-sliders-h"></i>
+            <span>Hệ thống</span>
         </a>
     </div>
 

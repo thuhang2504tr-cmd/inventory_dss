@@ -5,7 +5,6 @@
 <div class="page-hero">
     <div>
         <h1 class="page-title">Phân tích ABC</h1>
-        <p class="page-subtitle">Phân loại nguyên vật liệu theo giá trị tiêu thụ để ưu tiên kiểm soát. Khu vực bộ lọc, biểu đồ và bảng dữ liệu được tách rõ ràng để dễ thao tác.</p>
     </div>
     <div class="hero-badge">Phân loại ưu tiên</div>
 </div>
@@ -71,7 +70,6 @@
     <div class="table-head">
         <div>
             <h2>ABC theo sản phẩm{% if selected_product %}: {{ selected_product.name }}{% endif %}</h2>
-            <p>Chỉ hiển thị các nguyên vật liệu thuộc BOM của sản phẩm đã chọn.</p>
         </div>
         {% if selected_product %}
         <div class="info-chip">{{ selected_product.name }}</div>
@@ -113,7 +111,6 @@
     <div class="table-head">
         <div>
             <h2>Toàn bộ nguyên vật liệu</h2>
-            <p>Bảng tổng hợp để lọc và so sánh nhanh theo nhóm ABC trong toàn hệ thống.</p>
         </div>
         <div class="info-chip">Đang lọc: {{ selected_abc|default:"Tất cả" }}</div>
     </div>

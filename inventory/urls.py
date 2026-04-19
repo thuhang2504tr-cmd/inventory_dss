@@ -8,6 +8,7 @@ from .views import (
     alert,
     forecast,
     abc_page,
+    system_settings,
     delete_sale,
     delete_transaction,
 )
@@ -23,6 +24,7 @@ urlpatterns = [
     path('alert/', alert, name='alert'),
     path('forecast/', forecast, name='forecast'),
     path('abc/', abc_page, name='abc'),
+    path('system/', system_settings, name='system-settings'),
     path('delete-sale/<int:id>/', delete_sale, name='delete_sale'),
     path('delete-transaction/<int:id>/', delete_transaction, name='delete_transaction'),
 ]
