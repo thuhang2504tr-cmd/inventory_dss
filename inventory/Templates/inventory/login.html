@@ -170,6 +170,10 @@
             box-shadow: 0 14px 26px rgba(79, 126, 161, 0.2);
         }
 
+       .field + .field {
+            margin-top: 8px;
+        }
+
         .error-message {
             margin: 14px 0 0;
             padding: 12px 14px;
@@ -193,7 +197,7 @@
 <body>
     <div class="welcome-shell">
         <section class="welcome-panel">
-            <div class="welcome-badge">DSS Inventory</div>
+            <div class="welcome-badge">STRATIX</div>
             <h1 class="welcome-title">Chào mừng bạn đến hệ thống quản lý tồn kho</h1>
             <p class="welcome-text">
                 Hãy nhập tên để bắt đầu sử dụng bảng điều khiển. Bạn có thể theo dõi doanh số,
@@ -215,13 +219,6 @@
                         <span>Phân tích nhu cầu sản phẩm và xác định nguyên vật liệu cần ưu tiên xử lý.</span>
                     </div>
                 </div>
-                <div class="feature-item">
-                    <div class="feature-icon">3</div>
-                    <div>
-                        <strong>Truy cập nhanh</strong>
-                        <span>Không cần mật khẩu, chỉ cần nhập tên để vào hệ thống và bắt đầu làm việc.</span>
-                    </div>
-                </div>
             </div>
         </section>
 
@@ -232,8 +229,12 @@
             <form method="POST">
                 {% csrf_token %}
                 <div class="field">
-                    <label for="display_name">Tên hiển thị</label>
-                    <input id="display_name" name="display_name" type="text" placeholder="Ví dụ: Admin" autocomplete="name" required>
+                    <label for="display_name">Tên đăng nhập</label>
+                    <input id="display_name" name="display_name" type="text" placeholder="Ví dụ: admin" autocomplete="name" required>
+                </div>
+                 <div class="field" >
+                    <label for="display_name">Mật khẩu</label>
+                    <input id="display_password" name="display_password" type="password" placeholder="Ví dụ:123" autocomplete="password" required>
                 </div>
 
                 <button type="submit" class="submit-btn">Vào hệ thống</button>

@@ -5,6 +5,64 @@
     .stat-red {
         background: linear-gradient(135deg, #c45353, #de6b6b);
     }
+
+    .evaluation-box {
+        display: grid;
+        grid-template-columns: 44px 1fr;
+        gap: 12px;
+        align-items: start;
+        padding: 14px;
+        border-radius: 16px;
+        border: 1px solid #d8e2ef;
+    }
+
+    .evaluation-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        color: #fff;
+        font-size: 18px;
+    }
+
+    .evaluation-content strong {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 14px;
+        color: #1f3442;
+    }
+
+    .evaluation-content p {
+        margin: 0;
+        color: #385161;
+        line-height: 1.6;
+        font-size: 14px;
+    }
+
+    .evaluation-good {
+        background: linear-gradient(135deg, rgba(116, 176, 149, 0.12), rgba(98, 170, 177, 0.1));
+    }
+
+    .evaluation-good .evaluation-icon {
+        background: linear-gradient(135deg, #4d8f78, #74b095);
+    }
+
+    .evaluation-medium {
+        background: linear-gradient(135deg, rgba(107, 152, 183, 0.12), rgba(98, 170, 177, 0.1));
+    }
+
+    .evaluation-medium .evaluation-icon {
+        background: linear-gradient(135deg, #4f7ea1, #6b98b7);
+    }
+
+    .evaluation-bad {
+        background: linear-gradient(135deg, rgba(196, 83, 83, 0.12), rgba(222, 107, 107, 0.1));
+    }
+
+    .evaluation-bad .evaluation-icon {
+        background: linear-gradient(135deg, #c45353, #de6b6b);
+    }
 </style>
 {% endblock %}
 
@@ -44,15 +102,28 @@
         <h2 class="panel-title">Đánh giá mô hình</h2>
         <p class="panel-subtitle">MAPE được dùng để đánh giá mức độ phù hợp của mô hình đối với sản phẩm đã chọn.</p>
         {% if product_result %}
-            <div class="info-chip">
-                <strong> Đánh giá :</strong>
-                {% if product_result.mape < 10 %}
-                    Mô hình có độ chính xác rất cao (MAPE < 10%). Kết quả dự báo rất đáng tin cậy.
-                {% elif product_result.mape < 15 %}
-                    Mô hình ở mức chấp nhận được (10% - 20%). Cần theo dõi thêm biến động thực tế.
-                {% else %}
-                    Độ sai số cao (MAPE > 20%). Nhu cầu sản phẩm này có biến động quá lớn, mô hình hiện tại không phù hợp.
-                {% endif %}
+            <div class="evaluation-box {% if product_result.mape < 10 %}evaluation-good{% elif product_result.mape < 15 %}evaluation-medium{% else %}evaluation-bad{% endif %}">
+                <div class="evaluation-icon">
+                    {% if product_result.mape < 10 %}
+                        <i class="fas fa-check"></i>
+                    {% elif product_result.mape < 15 %}
+                        <i class="fas fa-info"></i>
+                    {% else %}
+                        <i class="fas fa-exclamation-triangle"></i>
+                    {% endif %}
+                </div>
+                <div class="evaluation-content">
+                    <strong>Đánh giá mô hình</strong>
+                    <p>
+                        {% if product_result.mape < 10 %}
+                            Mô hình có độ chính xác rất cao (MAPE < 10%). Kết quả dự báo rất đáng tin cậy.
+                        {% elif product_result.mape < 15 %}
+                            Mô hình ở mức chấp nhận được (10% - 20%). Cần theo dõi thêm biến động thực tế.
+                        {% else %}
+                            Độ sai số cao (MAPE > 20%). Nhu cầu sản phẩm này có biến động quá lớn, mô hình hiện tại không phù hợp.
+                        {% endif %}
+                    </p>
+                </div>
             </div>
         {% else %}
             <p class="muted-text">Chưa có dữ liệu dự báo. Hãy chọn sản phẩm để bắt đầu.</p>
