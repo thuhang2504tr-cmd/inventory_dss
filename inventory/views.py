@@ -222,7 +222,7 @@ def material_list(request):
 @session_name_required
 def alert(request):
     from .models import Product, BOM
-    from .services import forecast_product
+    from .services import forecast_product, optimize_order_quantity
 
     alerts = []
 
@@ -239,24 +239,41 @@ def alert(request):
             # ===== Demand =====
             demand = mean * bom.quantity_per_unit
 
-            # ===== giả sử bạn có tồn kho =====
-            ip = material.on_hand + material.on_order  # ⚠️ cần field này trong model Material
+            # ===== tồn kho =====
+            ip = material.on_hand + material.on_order
 
-            # ===== tính ROP =====
+            # ===== ROP =====
             lead_time = max(material.leadtime, 1)
-            z = 1.65  # service level 95%
+            z = 1.65
 
             material_std = std * bom.quantity_per_unit
-            rop = demand * lead_time + z * material_std * (lead_time ** 0.5)
+
+            # 🔥 TÁCH SS RA (rất quan trọng)
+            ss = z * material_std * (lead_time ** 0.5)
+
+            rop = demand * lead_time + ss
 
             # ===== CHECK =====
             if ip < rop:
+
+                # 🔥 FIX: thêm ss vào đây
+                S, Q, cost = optimize_order_quantity(
+                    material,
+                    demand,
+                    ip,
+                    rop,
+                    ss
+                )
+
                 alerts.append({
                     "product": p.name,
                     "material": material.name,
                     "rop": round(rop, 2),
                     "ip": round(ip, 2),
-                    "status": "ORDER"
+                    "status": "ORDER",
+                    "s": round(S, 2),
+                    "q": round(Q, 2),
+                    "cost": round(cost, 2),   # 🔥 FIX: dùng cost thật
                 })
 
     return render(request, 'inventory/alert.html', {

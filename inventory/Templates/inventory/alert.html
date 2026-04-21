@@ -37,6 +37,9 @@
                 <th>IP</th>
                 <th>ROP</th>
                 <th>Trạng thái</th>
+                <th>S tối ưu</th>
+                <th>Lượng đặt Q</th>
+                <th>Chi phí</th>
             </tr>
 
             {% for a in alerts %}
@@ -46,10 +49,13 @@
                 <td>{{ a.ip }}</td>
                 <td>{{ a.rop }}</td>
                 <td><span class="badge badge-low">{{ a.status }}</span></td>
+                <td>{{ a.s }}</td>
+                <td>{{ a.q }}</td>
+                <td>{{ a.cost|floatformat:1 }}</td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="5" class="empty-state">Không có cảnh báo tồn kho trong thời điểm hiện tại.</td>
+                <td colspan="8" class="empty-state">Không có cảnh báo tồn kho trong thời điểm hiện tại.</td>
             </tr>
             {% endfor %}
         </table>

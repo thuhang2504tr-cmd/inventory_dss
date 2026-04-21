@@ -1,5 +1,11 @@
-import pandas as pd
 import os
+import django
+import pandas as pd
+
+# ===== 🔥 FIX QUAN TRỌNG: SETUP DJANGO =====
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'inventory_dss.settings')
+django.setup()
+
 from django.conf import settings
 from inventory.models import Product, Material, BOM, SalesData, Transaction
 
@@ -10,7 +16,7 @@ def import_excel(file_path=None):
     # 0. FILE PATH
     # =========================
     if not file_path:
-        file_path = os.path.join(settings.BASE_DIR, "data", "data_new.xlsx")
+        file_path = os.path.join(settings.BASE_DIR, "data", "data_new_3.xlsx")
 
     print("📂 USING FILE:", file_path)
 
@@ -150,7 +156,7 @@ def import_excel(file_path=None):
         Transaction.objects.create(
             material=material,
             quantity=row.get('Quantity', 0) or 0,
-            transaction_type=str(row.get('Type')).strip().upper(),
+            transaction_type=str(row.get('Type (IN/OUT)')).strip().upper(),
             date=date_value
         )
 
@@ -159,3 +165,6 @@ def import_excel(file_path=None):
     print("✅ Imported Transactions:", count_trans)
 
     print("🎉 DONE IMPORT ALL DATA")
+# ===== CHẠY TRỰC TIẾP =====
+if __name__ == "__main__":
+    import_excel()

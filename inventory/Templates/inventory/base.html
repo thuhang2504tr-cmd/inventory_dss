@@ -628,6 +628,12 @@
             }
         }
     </style>
+    <style>
+           .ip-cell {
+                font-weight: 600;
+                color: #1e88e5;
+           }
+    </style>
     {% block extra_styles %}{% endblock %}
 </head>
 
@@ -648,21 +654,21 @@
             <i class="fas fa-chart-pie"></i>
             <span>Tổng quan</span>
         </a>
-        <a href="{% url 'product-list' %}" class="{% if request.resolver_match.url_name == 'product-list' %}active{% endif %}">
-            <i class="fas fa-box-open"></i>
-            <span>Sản phẩm</span>
+        <a href="{% url 'forecast' %}" class="{% if request.resolver_match.url_name == 'forecast' %}active{% endif %}">
+            <i class="fas fa-chart-line"></i>
+            <span>Dự báo nhu cầu</span>
         </a>
         <a href="{% url 'material-list' %}" class="{% if request.resolver_match.url_name == 'material-list' %}active{% endif %}">
             <i class="fas fa-cubes"></i>
-            <span>Nguyên vật liệu</span>
+            <span>Quản lý vật liệu</span>
+        </a>
+        <a href="{% url 'product-list' %}" class="{% if request.resolver_match.url_name == 'product-list' %}active{% endif %}">
+            <i class="fas fa-box-open"></i>
+            <span>Phân tích tồn kho</span>
         </a>
         <a href="{% url 'alert' %}" class="{% if request.resolver_match.url_name == 'alert' %}active{% endif %}">
             <i class="fas fa-bell"></i>
-            <span>Cảnh báo</span>
-        </a>
-        <a href="{% url 'forecast' %}" class="{% if request.resolver_match.url_name == 'forecast' %}active{% endif %}">
-            <i class="fas fa-chart-line"></i>
-            <span>Dự báo</span>
+            <span>Cảnh báo tồn kho</span>
         </a>
         <a href="{% url 'abc' %}" class="{% if request.resolver_match.url_name == 'abc' %}active{% endif %}">
             <i class="fas fa-layer-group"></i>

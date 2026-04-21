@@ -4,7 +4,8 @@
 
 <div class="page-hero">
     <div>
-        <h1 class="page-title">Sản phẩm</h1>
+        <h1 class="page-title">Phân tích tồn kho</h1>
+        <p class="page-subtitle">Theo dõi tồn kho và hỗ trợ quyết định đặt hàng.</p>
     </div>
     <div class="hero-badge">Mô phỏng DSS</div>
 </div>
@@ -68,9 +69,7 @@
                 <th>Độ lệch chuẩn</th>
                 <th>IP</th>
                 <th>ROP</th>
-                <th>S tối ưu</th>
-                <th>Lượng đặt</th>
-                <th>Chi phí</th>
+                <th>Trạng thái</th>
             </tr>
 
             {% for r in results %}
@@ -80,13 +79,18 @@
                 <td>{{ r.std }}</td>
                 <td>{{ r.ip }}</td>
                 <td>{{ r.rop }}</td>
-                <td>{{ r.s }}</td>
-                <td>{{ r.q }}</td>
-                <td>{{ r.cost }}</td>
+
+                <td>
+            {% if r.ip > r.rop %}
+                <span style="color:green; font-weight:bold;">Ổn định</span>
+            {% else %}
+                <span style="color:red; font-weight:bold;">Đặt hàng</span>
+            {% endif %}
+                </td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="8" class="empty-state">Chọn sản phẩm và bấm "Chạy DSS" để xem kết quả.</td>
+                <td colspan="6" class="empty-state">Chọn sản phẩm và bấm "Chạy DSS" để xem kết quả.</td>
             </tr>
             {% endfor %}
         </table>

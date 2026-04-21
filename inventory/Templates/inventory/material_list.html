@@ -50,9 +50,9 @@
                 <td>{{ m.name }}</td>
                 <td>{{ m.on_hand }}</td>
                 <td>{{ m.on_order }}</td>
-                <td>{{ m.inventory_position }}</td>
+                <td class="ip-cell">{{ m.inventory_position }}</td>
                 <td>{{ m.leadtime }}</td>
-                <td>{{ m.holding_cost }}</td>
+                <td>{{ m.holding_cost|floatformat:1 }}</td>
                 <td>{{ m.ordering_cost }}</td>
                 <td>{{ m.price_cost }}</td>
             </tr>
